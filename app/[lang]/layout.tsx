@@ -8,9 +8,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { lang: string } }): Promise<Metadata> {
   const dict = getDict(params.lang);
   const base = "https://www.gigilcoiffure.be";
+  const locale = params.lang === "fr" ? "fr_BE" : params.lang === "nl" ? "nl_BE" : "en_GB";
   return {
     title: dict.meta.title,
     description: dict.meta.description,
+    keywords: dict.meta.keywords,
     alternates: {
       canonical: `${base}/${params.lang}`,
       languages: {
@@ -21,12 +23,30 @@ export async function generateMetadata({ params }: { params: { lang: string } })
       },
     },
     openGraph: {
-      title: dict.meta.title,
-      description: dict.meta.description,
+      title: dict.meta.ogTitle,
+      description: dict.meta.ogDescription,
       url: `${base}/${params.lang}`,
       siteName: "GiGi L Coiffure",
-      locale: params.lang === "fr" ? "fr_BE" : params.lang === "nl" ? "nl_BE" : "en_GB",
+      locale,
       type: "website",
+      images: [
+        {
+          url: `${base}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: "GiGi L Coiffure — Tongeren",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: dict.meta.ogTitle,
+      description: dict.meta.ogDescription,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large" },
     },
   };
 }
@@ -36,9 +56,10 @@ const schema = {
   "@type": "HairSalon",
   name: "GiGi L Coiffure",
   description:
-    "Salon de coiffure africaine et européenne à Tongres, spécialisé dans les cheveux bouclés, frisés et crépus. Tresses, tissage, microshading, perruques et mèches.",
+    "Salon de coiffure africaine et européenne à Tongres, spécialisé dans les cheveux bouclés, frisés et crépus. Tresses, tissage, microshading, prothèse ongulaire, perruques et mèches.",
   url: "https://www.gigilcoiffure.be",
   telephone: "+32484164905",
+  image: "https://www.gigilcoiffure.be/og-image.jpg",
   address: {
     "@type": "PostalAddress",
     streetAddress: "Koninksemsteenweg 144",
@@ -57,7 +78,10 @@ const schema = {
       closes: "18:00",
     },
   ],
+  hasMap: "https://www.google.com/maps/place/Koninksemsteenweg+144,+3700+Tongeren",
   priceRange: "€€",
+  servesCuisine: undefined,
+  sameAs: ["https://www.facebook.com/100093316226955"],
 };
 
 export default function LangLayout({

@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
   const booking_time = String(body.booking_time || "");
   const message = body.message ? String(body.message).trim().slice(0, 1000) : null;
   const lang = ["fr", "nl", "en"].includes(body.lang) ? body.lang : "fr";
+  const category = ["coiffure", "nails", "microshading"].includes(body.category) ? body.category : null;
 
   if (!name || !phone || !service) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { error } = await supabase.from("bookings").insert({
-    name, phone, email, service, booking_date, booking_time, message, lang,
+    name, phone, email, service, booking_date, booking_time, message, lang, category,
   });
 
   if (error) {

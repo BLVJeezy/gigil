@@ -12,7 +12,8 @@ create table if not exists public.bookings (
   booking_time time not null,
   message text,
   lang text not null default 'fr',
-  status text not null default 'new' check (status in ('new', 'confirmed', 'cancelled'))
+  status text not null default 'new' check (status in ('new', 'confirmed', 'cancelled')),
+  category text check (category in ('coiffure', 'nails', 'microshading'))
 );
 
 create index if not exists bookings_date_idx on public.bookings (booking_date);
